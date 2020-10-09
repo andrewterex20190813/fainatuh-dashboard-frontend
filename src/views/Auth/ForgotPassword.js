@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import Config from '../../config';
+
 import axios from 'axios';
 
 function Copyright() {
@@ -66,7 +68,7 @@ export default function SignIn() {
             return;
         }
 
-        axios.post('http://localhost:3003/api/admin-auth/forgot-password',
+        axios.post(Config.SERVER_URL + '/api/admin-auth/forgot-password',
             {
                 email: email
             },

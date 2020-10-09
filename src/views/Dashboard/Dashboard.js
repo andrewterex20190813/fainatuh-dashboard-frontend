@@ -32,6 +32,8 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
+import Config from "../../config";
+
 import { bugs, website, server } from "variables/general.js";
 
 import {
@@ -58,7 +60,7 @@ class Dashboard extends Component {
     }
 
     // load user requests from the server
-    fetch('http://localhost:3003/api/users/requests', {
+    fetch(Config.SERVER_URL + '/api/users/requests', {
       method: 'GET', // or 'PUT'
     })
     .then(response => response.json())

@@ -14,6 +14,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import Config from "../../config";
+
 import axios from 'axios';
 
 function Copyright() {
@@ -69,7 +71,7 @@ export default function SignUp() {
             return;
         }
 
-        axios.post('http://localhost:3003/api/admin-auth/signup',
+        axios.post(Config.SERVER_URL + '/api/admin-auth/signup',
             {
                 name: firstName + " " + lastName,
                 email: email,
@@ -84,7 +86,7 @@ export default function SignUp() {
         .then(response => {
             console.log('Success:', response);
             setError("");
-            history.push("/admin/dashboard");
+            history.push("/admin/sign-in");
         })
         .catch(error => {
             if (error.response) {

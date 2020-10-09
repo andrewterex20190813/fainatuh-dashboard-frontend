@@ -17,6 +17,7 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
 import avatar from "assets/img/faces/marc.jpg";
+import Config from "../../config";
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -86,7 +87,7 @@ class UserProfile extends Component {
     }
 
     // load user requests from the server
-    fetch('http://localhost:3003/api/users/requests/' + this.props.match.params.requestId, {
+    fetch(Config.SERVER_URL + '/api/users/requests/' + this.props.match.params.requestId, {
       method: 'GET', // or 'PUT'
     })
     .then(response => response.json())
@@ -128,7 +129,7 @@ class UserProfile extends Component {
       requestState: "approved" 
     });
 
-    fetch('http://localhost:3003/api/users/requests/' + this.props.match.params.requestId, {
+    fetch(Config.SERVER_URL + '/api/users/requests/' + this.props.match.params.requestId, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -150,7 +151,7 @@ class UserProfile extends Component {
       requestState: "rejected" 
     });
 
-    fetch('http://localhost:3003/api/users/requests/' + this.props.match.params.requestId, {
+    fetch(Config.SERVER_URL + '/api/users/requests/' + this.props.match.params.requestId, {
       method: 'PUT', 
       headers: {
         'Content-Type': 'application/json',
@@ -177,14 +178,14 @@ class UserProfile extends Component {
               <CardHeader color="primary">
                 <h4 className={classes.cardTitleWhite}>
                   { 
-                    this.state.requestState == "pending"? "Pending":
+                    this.state.requestState == "pending"? "Pending Request":
                     (this.state.requestState == "approved"? "Approved": "Rejected")
                     + " Request"
                   }
                 </h4>
                 <p className={classes.cardCategoryWhite}>
                   { 
-                    this.state.requestState == "pending"? "Pending":
+                    this.state.requestState == "pending"? "Pending user request":
                     (this.state.requestState == "approved"? "Approved": "Rejected")
                     + " user request"
                   }

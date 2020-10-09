@@ -5,6 +5,7 @@ import classNames from "classnames";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
 import MenuList from "@material-ui/core/MenuList";
 import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
@@ -28,10 +29,26 @@ const useStyles = makeStyles(styles);
 export default function AdminNavbarLinks() {
   const history = useHistory();
 
+  const [searchText, setSearchText] = React.useState("");
+  const [notifyData, setNotifyData] = React.useState([
+    {
+      name: "Hector Rogers",
+      _id: "5f7f800d3dd81c5d4cf3f347"
+    }
+  ]);
+
   const classes = useStyles();
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
+  
+  const handleSearch = () => {
+    console.log('handleSearch ' + searchText);
+    history.replace(history.location.pathname + "?search=" + searchText);
+    window.location.reload(false);
+  }
+
   const handleClickNotification = event => {
+    console.log('handleClickNotification');    
     if (openNotification && openNotification.contains(event.target)) {
       setOpenNotification(null);
     } else {
@@ -40,9 +57,17 @@ export default function AdminNavbarLinks() {
   };
   
   const handleCloseNotification = () => {
+    console.log('handleCloseNotification');    
     setOpenNotification(null);
   };
-  
+
+  function handleNotificationItemClick(data) {
+    console.log('handleNotificationItemClick');  
+    setOpenNotification(null);
+    setNotifyData([]);
+    history.push('/admin/request/' + data._id);
+  }
+
   const handleClickProfile = event => {
     if (openProfile && openProfile.contains(event.target)) {
       setOpenProfile(null);
@@ -75,10 +100,13 @@ export default function AdminNavbarLinks() {
             placeholder: "Search",
             inputProps: {
               "aria-label": "Search"
+            },
+            onChange: (e) => {
+              setSearchText(e.target.value);
             }
           }}
         />
-        <Button color="white" aria-label="edit" justIcon round>
+        <Button color="white" aria-label="edit" justIcon round onClick={handleSearch}>
           <Search />
         </Button>
       </div>
@@ -109,7 +137,10 @@ export default function AdminNavbarLinks() {
           className={classes.buttonLink}
         >
           <Notifications className={classes.icons} />
-          <span className={classes.notifications}>5</span>
+          {
+            notifyData.length != 0 &&
+            <span className={classes.notifications}>{notifyData.length}</span>
+          }
           <Hidden mdUp implementation="css">
             <p onClick={handleCloseNotification} className={classes.linkText}>
               Notification
@@ -139,36 +170,16 @@ export default function AdminNavbarLinks() {
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseNotification}>
                   <MenuList role="menu">
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Mike John responded to your email
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      You have 5 new tasks
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      You{"'"}re now friend with Andrew
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Another Notification
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Another One
-                    </MenuItem>
+                    {
+                      notifyData.map((data, key) => 
+                      <MenuItem
+                        key={key}
+                        onClick={() => handleNotificationItemClick(data)}
+                        className={classes.dropdownItem}
+                      >
+                      { data.name + " sent a request"}
+                      </MenuItem>)
+                    }
                   </MenuList>
                 </ClickAwayListener>
               </Paper>

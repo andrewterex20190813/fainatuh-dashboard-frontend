@@ -9,6 +9,8 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 
+import Config from "../../config"
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as userRequestsAction from '../../store/userRequests/actions';
@@ -55,8 +57,14 @@ class Requests extends Component {
         userRequests: [],
       };
       
+      // search text
+      var url_string = window.location.href;
+      var url = new URL(url_string);
+      var searchText = url.searchParams.get("search");
+      console.log("searchText " + searchText);
+
       // load user requests from the server
-      fetch('http://localhost:3003/api/users/requests', {
+      fetch(Config.SERVER_URL + '/api/users/requests', {
         method: 'GET', // or 'PUT'
       })
       .then(response => response.json())
@@ -67,7 +75,10 @@ class Requests extends Component {
         var tableData = [];
 
         data.forEach(request => {
-          if (request.state == this.state.requestState) {
+          console.log(request.name);
+          if (request.state == this.state.requestState && 
+            (searchText == null || searchText == '' || request.name.toLowerCase().includes(searchText.toLowerCase()))) {
+            
             userRequests.push(request);
           }
         });
